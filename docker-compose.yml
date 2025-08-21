@@ -1,0 +1,134 @@
+version: "3.9"
+
+x-env: &common-env
+  TZ: "UTC"
+  PYTHONUNBUFFERED: "1"
+
+x-logging: &default-logging
+  driver: "json-file"
+  options:
+    max-size: "10m"
+    max-file: "5"
+
+x-deploy: &default-deploy
+  resources:
+    limits:
+      cpus: "1.5"
+      memory: 1G
+    reservations:
+      memory: 256M
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  pg-data:
+  redis-data:
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: registeroff_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-registeroff}
+      POSTGRES_USER: ${POSTGRES_USER:-registeroff}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set_in_.env}
+      # deterministik UTF-8
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --lc-collate=C --lc-ctype=C"
+      <<: *common-env
+    command:
+      - "postgres"
+      - "-c"
+      - "max_connections=300"
+      - "-c"
+      - "shared_buffers=512MB"
+      - "-c"
+      - "work_mem=16MB"
+      - "-c"
+      - "maintenance_work_mem=256MB"
+      - "-c"
+      - "effective_cache_size=1536MB"
+      - "-c"
+      - "wal_level=replica"
+      - "-c"
+      - "max_wal_size=2GB"
+      - "-c"
+      - "checkpoint_timeout=15min"
+      - "-c"
+      - "shared_preload_libraries=pg_stat_statements"
+      - "-c"
+      - "pg_stat_statements.max=10000"
+      - "-c"
+      - "pg_stat_statements.save=on"
+      - "-c"
+      - "jit=on"
+    ports:
+      - "5432:5432"   # <-- shu qatordan komment belgisi olib tashlanadi
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+      # Quyidagi fayl ixtiyoriy: birinchi ishga tushishda extensions yoqish uchun
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-registeroff} -d ${POSTGRES_DB:-registeroff} || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    logging: *default-logging
+    networks: [backend]
+    deploy: *default-deploy
+    # DEV rejimda kerak bo'lsa oching:
+    # ports:
+    #   - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    container_name: registeroff_redis
+    restart: unless-stopped
+    command: ["redis-server", "--save", "60", "1000", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "PING"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    logging: *default-logging
+    networks: [backend]
+    deploy: *default-deploy
+
+#  bot:
+#    build:
+#      context: .
+#      dockerfile: ./Dockerfile
+#    container_name: registeroff_bot
+#    restart: unless-stopped
+#    depends_on:
+#      db:
+#        condition: service_healthy
+#      redis:
+#        condition: service_healthy
+#    environment:
+#      <<: *common-env
+#      # App (async) DSN — SQLModel/SQLAlchemy uchun
+#      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-registeroff}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-registeroff}
+#      REDIS_DSN: redis://registeroff_redis:6379/0
+#      USE_REDIS: "true"
+#      BOT_TOKEN: ${BOT_TOKEN:?set_in_.env}
+#      ADMINS: ${ADMINS:-}
+#    command: ["python", "-m", "run"]
+#    networks: [backend]
+#    logging: *default-logging
+#    deploy: *default-deploy
+#    security_opt:
+#      - no-new-privileges:true
+#    read_only: true
+#    tmpfs:
+#      - /tmp
+#      - /run
+#    healthcheck:
+#      test: ["CMD", "python", "-c", "import socket; s=socket.socket(); s.settimeout(2); s.connect(('registeroff_redis',6379)); print('OK')"]
+#      interval: 30s
+#      timeout: 5s
+#      retries: 5

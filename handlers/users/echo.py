@@ -1,4 +1,3 @@
-from keyboards.inline.keyboards_inline import choose_visitor
 from aiogram.types import ContentType
 from aiogram import types
 from loader import dp
@@ -23,6 +22,5 @@ async def handle_unexpected_content(message: types.Message):
 
     await message.answer(
         f"Xurmatli {user_name}, siz ruxsat etilmagan ma'lumot yubordingiz: {readable_type}.\n"
-        "Iltimos, suralgan ma'lumotni yuboring!",
-        reply_markup=choose_visitor
+        "Iltimos, suralgan ma'lumotni yuboring! /start buyrug'ini yuboring."
     )
