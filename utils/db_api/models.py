@@ -63,4 +63,5 @@ class AdminUser(BaseModel, table=True):
     telegram_number: str = Field(max_length=12)
     telegram_name: str = Field(max_length=250)
     name: str = Field(max_length=100, nullable=True)
+    faculty: str = Field(default="", max_length=100)
     language: str = Field(default="", max_length=32)

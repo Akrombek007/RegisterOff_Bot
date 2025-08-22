@@ -1,3 +1,5 @@
+from keyboards.inline import keyboard, langauage_keyboard, user_menu, akademik_keyboard, hemis_keyboard, \
+    faculty_keyboard, contract_keyboard, admins_message
 from utils.db_api.core import DatabaseService1, User
 from data.config import ADMIN_M2, DATABASE_URL
 from aiogram.dispatcher import FSMContext
@@ -11,7 +13,6 @@ from loader import dp
 from re import match
 import logging
 import re
-
 
 # Fayl junatishni bloklash uchun handler
 dp.message_handler(content_types=[types.ContentType.DOCUMENT,
@@ -62,31 +63,68 @@ class BotHandler:
     @handle_errors
     async def start(message: types.Message, state: FSMContext):
         await state.reset_state(with_data=True)
-        await message.answer("Xizmat turini tanlang:")
+        await message.answer("Xizmat turini tanlang:", reply_markup=user_menu)
 
     @staticmethod
-    @dp.message_handler(content_types=[types.ContentType.CONTACT, types.ContentType.TEXT])
+    @dp.callback_query_handler(lambda c: c.data.startswith("langauage_"))
     @handle_errors
     async def process_contact(message: types.Message, state: FSMContext):
-        if message.content_type != types.ContentType.CONTACT:
-            await message.answer("❗ Iltimos, tugma orqali kontakt yuboring.")
-            return
+        await message.answer("Xush kelibsiz! Xizmat turini tanlang:", reply_markup=user_menu)
         user_id = str(message.from_user.id)
-        contact = message.contact
-        if await db.get(User, filters={'telegram_id': user_id}):
-            await message.answer("✅ Siz ro'yxatdan o'tgansiz. Xizmat turini tanlang:")
-        elif contact.user_id == message.from_user.id:
-            await db.add(User(
-                telegram_id=user_id,
-                username=message.from_user.username or "",
-                telegram_name=message.from_user.full_name,
-                telegram_number=contact.phone_number,
-                status=False,
-                test_point='1'
-            )
-            )  # Sevimli , Mening yurtim,
-            await state.update_data({"telegram_number": contact.phone_number})
-            await message.answer("Xizmat turini tanlang:")
-        else:
-            await message.answer("❌ Bu kontakt sizga tegishli emas. Iltimos, o‘z kontaktingizni yuboring.")
+        await db.add(User(
+            telegram_id=user_id,
+            username=message.from_user.username or "",
+            telegram_name=message.from_user.full_name,
+            status=False
+        ))
+
+    @staticmethod
+    @dp.callback_query_handler(lambda c: c.data.startswith("user_"))
+    @handle_errors
+    async def info_1(callback: types.CallbackQuery, state: FSMContext):
+        data = callback.data.split("_")
+        if data[1] == "info_1":
+            await callback.message.answer("Akademik faoliyat bo'yicha murojaatlar!", reply_markup=akademik_keyboard)
+        elif data[1] == "info_2":
+            await callback.message.answer("Hemis tizimi yuzasidan murojaatlar!", reply_markup=hemis_keyboard)
+        elif data[1] == "info_3":
+            await callback.message.answer("Fakeltet va turar joylarni manzili (lokatsiya)",
+                                          reply_markup=faculty_keyboard)
+        elif data[1] == "info_4":
+            await callback.message.answer("To'lovlar masalasi bo'yicha murojaatlar!", reply_markup=contract_keyboard)
+        elif data[1] == "info_5":
+            await callback.message.answer("Savol va takliflar bo'yicha adminga murojaat!", reply_markup=admins_message)
+
+
+    @staticmethod
+    @dp.callback_query_handler(lambda c: c.data.startswith("akademik_"))
+    @handle_errors
+    async def akademik_func(callback: types.CallbackQuery, state: FSMContext):
+        data = callback.data.split("_")
+        if data[1] == "akademik_1":
+            await callback.message.answer("O'zbekistondagi xorijiy va nodavlat OTMlardan o'qishni ko'chirish bo'yicha murojaatlar!", reply_markup=akademik_keyboard)
+        elif data[1] == "akademik_2":
+            await callback.message.answer("Xorijiy OTMlardan o'qishni ko'chirish bo'yicha murojaatlar!", reply_markup=akademik_keyboard)
+        elif data[1] == "akademik_3":
+            await callback.message.answer("Grandlar va tanlovlar haqida ma'lumotlar!", reply_markup=akademik_keyboard)
+        elif data[1] == "akademik_4":
+            await callback.message.answer("Ilmiy konferensiyalar haqida ma'lumotlar!", reply_markup=akademik_keyboard)
+        elif data[1] == "akademik_5":
+            await callback.message.answer("Innovatsion g'oya va startaplarga ro'yxatdan o'tish haqida ma'lumotlar!", reply_markup=akademik_keyboard)
+        elif data[1] == "akademik_6":
+            await callback.message.answer("Nomli va nizomiy atoqli olimlari stipendiyalari haqida ma'lumot!", reply_markup=akademik_keyboard)
+        elif data[1] == "akademik_7":
+            await callback.message.answer("Universitetga ikkinchi ta'lim shakliga o'qishga topshirish!", reply_markup=akademik_keyboard)
+        elif data[1] == "akademik_8":
+            await callback.message.answer("Magistraturaga o'qishga hujjat topshirish!", reply_markup=akademik_keyboard)
+        elif data[1] == "akademik_9":
+            await callback.message.answer("Qo'shma ta'limga hujjat topshirish (innovatsion pedagog)!", reply_markup=akademik_keyboard)
+        elif data[1] == "akademik_10":
+            await callback.message.answer("Ma'sul xodim bilan bog'lanish!", reply_markup=akademik_keyboard)
+
+
+
+
+
+
 
