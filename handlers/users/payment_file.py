@@ -51,17 +51,35 @@ def handle_errors(func):
     return wrapper
 
 
-class BotHandler:
+class PaymentHandler:
     @staticmethod
-    @dp.message_handler(commands=["start"])
+    @dp.callback_query_handler(lambda c: c.data == "info_4")
     @handle_errors
-    async def start(message: types.Message, state: FSMContext):
-        await state.reset_state(with_data=True)
-        await message.answer("Xizmat turini tanlang:", reply_markup=user_menu)
+    async def payment_func(callback: types.CallbackQuery, state: FSMContext):
+        await callback.message.answer("Kerakli xizma turini tanlang:", reply_markup=contract_keyboard)
+
 
     @staticmethod
-    @dp.callback_query_handler(lambda c: c.data.startswith("langauage_"))
+    @dp.callback_query_handler(lambda c: c.data.startswith("contract_"))
     @handle_errors
-    async def process_contact(callback_query: types.CallbackQuery, state: FSMContext):
-        await callback_query.message.answer("Xush kelibsiz! Xizmat turini tanlang:", reply_markup=user_menu)
-        await callback_query.answer()
+    async def payment_func(callback: types.CallbackQuery, state: FSMContext):
+        data = callback.data
+        if callback.data == "contract_1":
+            await callback.message.answer("To'lovni qabul qilish")
+        elif callback.data == "contract_2":
+            await callback.message.answer("Talabalar turar joyiga ariza berish va shartnoma olish")
+        elif callback.data == "contract_3":
+            await callback.message.answer("Fanlardan qayta o‘qishga ariza berish va shartnoma olish")
+        elif callback.data == "contract_4":
+            await callback.message.answer("Stipendiya to’g’risida ma’lumot olish")
+        elif callback.data == "contract_5":
+            await callback.message.answer("Ijara shartnomasiga ariza berish")
+        elif callback.data == "contract_6":
+            await callback.message.answer("Ortiqcha to’lovni qaytarish bo’yicha (kantrakt, qayta o’qish, yotoqxona)")
+        elif callback.data == "contract_7":
+            await callback.message.answer("Ma’sul xodim bilan bog’lanish")
+
+
+
+
+

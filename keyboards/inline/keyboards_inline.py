@@ -77,7 +77,7 @@ contract_keyboard = InlineKeyboardMarkup(inline_keyboard=[
         InlineKeyboardButton(text="Ijara shartnomasiga ariza berish", callback_data="contract_5")
     ],
     [
-        InlineKeyboardButton(text="Ortiqcha to’lovni qaytarish bo’yicha (kantrakt, qayta o’qish, yotoqxona) ---> ariza example bilan qaysi xonaga uchrashliyligi", callback_data="contract_6")
+        InlineKeyboardButton(text="Ortiqcha to’lovni qaytarish bo’yicha (kantrakt, qayta o’qish, yotoqxona)", callback_data="contract_6")
     ],
     [
         InlineKeyboardButton(text="Ma’sul xodim bilan bog’lanish (Fakultet bo’yicha)", callback_data="contract_7")
@@ -93,7 +93,7 @@ faculty_keyboard = InlineKeyboardMarkup(inline_keyboard=[
         InlineKeyboardButton(text="Tabiiy fanlar fakulteti", callback_data="faculty_2")
     ],
     [
-        InlineKeyboardButton(text="Pedagogika psixologiya va inklyuziv ta’lim fakulteti ", callback_data="faculty_3")
+        InlineKeyboardButton(text="Pedagogika psixologiya va inklyuziv ta’lim fakulteti", callback_data="faculty_3")
     ],
     [
         InlineKeyboardButton(text="Filologiya fakulteti", callback_data="faculty_4"),
@@ -191,6 +191,34 @@ akademik_keyboard = InlineKeyboardMarkup(inline_keyboard=[
     ]
 ]
 )
+
+student_flat_keyboard = InlineKeyboardMarkup(inline_keyboard=[
+    [
+        InlineKeyboardButton(text="Oqtepa texnikumga tegishli talabalar turar joyi", callback_data="flat_1")
+    ],
+    [
+        InlineKeyboardButton(text="5-sonli talabalar turar joyi", callback_data="flat_2")
+    ],
+    [
+        InlineKeyboardButton(text="7-sonli talabalar turar joyi", callback_data="flat_3")
+    ],
+    [
+        InlineKeyboardButton(text="8-sonli talabalar turar joyi", callback_data="flat_4")
+    ],
+    [
+        InlineKeyboardButton(text="9-sonli talabalar turar joyi", callback_data="flat_5")
+    ],
+    [
+        InlineKeyboardButton(text="10-sonli talabalar turar joyi", callback_data="flat_6")
+    ],
+    [
+        InlineKeyboardButton(text="DXSH talabar turar joyi", callback_data="flat_7")
+    ],
+])
+
+location_keyboard = InlineKeyboardMarkup(row_width=2)
+location_keyboard.add(InlineKeyboardButton(text="📍 Fakultetlar manzili", callback_data="location_one"),
+                      InlineKeyboardButton(text="📍 Talabalar turar joy manzili", callback_data="location_two"))
 
 keyboard = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
 button = KeyboardButton(text="📞 Telefon raqamingizni yuboring", request_contact=True)
