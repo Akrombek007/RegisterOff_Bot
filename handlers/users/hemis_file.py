@@ -76,7 +76,9 @@ class HemisHandler:
         data = callback.data
         if callback.data == "hemis_1":
             await callback.message.answer(
-                "HEMIS login parolni qayta tiklash uchun jshshir va Ism Familiyangizni to'liq kiriting!")
+                "HEMIS login parolni qayta tiklash uchun JSHSHIR va Ism Familiyangizni to'liq kiriting!\n"
+                "(Masalan: 12345678901234 Anvarov Anvar)"
+            )
         elif callback.data == "hemis_2":
             path_file = await hemis_file_path_("reyting")
             number = 1
