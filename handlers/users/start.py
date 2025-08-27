@@ -15,4 +15,5 @@ async def bot_start(message: Message):
     if str(message.from_user.id) in ['685098494', '1709066039', '5506760681']:
         await message.answer("Buyruqni yuboring! /hisobot")
     elif str(message.from_user.id) not in '':
+        await message.delete()
         await message.answer("Tilni tanlang!", reply_markup=langauage_keyboard)

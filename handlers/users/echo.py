@@ -2,13 +2,21 @@ from aiogram.types import ContentType
 from aiogram import types
 from loader import dp
 
+BLOCKED_TYPES = [
+    ContentType.PHOTO,
+    ContentType.DOCUMENT,
+    ContentType.VIDEO,
+    ContentType.AUDIO,
+    ContentType.VOICE,
+    ContentType.STICKER,
+    ContentType.CONTACT,
+    ContentType.LOCATION,
+    ContentType.ANIMATION,
+]
 
-@dp.message_handler(state=None, content_types=ContentType.ANY)
-async def handle_unexpected_content(message: types.Message):
-    content_type = message.content_type
-    user_name = message.from_user.full_name
+@dp.message_handler(content_types=BLOCKED_TYPES)
+async def block_unexpected_files(message: types.Message):
     readable_type = {
-        ContentType.TEXT: f"❌<b>{message.text}</b>❌",
         ContentType.PHOTO: "📷 rasm",
         ContentType.DOCUMENT: "📄 hujjat",
         ContentType.VIDEO: "🎥 video",
@@ -18,9 +26,9 @@ async def handle_unexpected_content(message: types.Message):
         ContentType.CONTACT: "👤 kontakt",
         ContentType.LOCATION: "📍 joylashuv",
         ContentType.ANIMATION: "📹 gif"
-    }.get(content_type, "❓ noma’lum turdagi fayl")
+    }.get(message.content_type, "❓ noma’lum fayl")
 
     await message.answer(
-        f"Xurmatli {user_name}, siz ruxsat etilmagan ma'lumot yubordingiz: {readable_type}.\n"
-        "Iltimos, suralgan ma'lumotni yuboring! /start buyrug'ini yuboring."
+        f"Xurmatli {message.from_user.full_name}, siz ruxsat etilmagan ma'lumot yubordingiz: {readable_type}.\n"
+        "Iltimos, matn shaklida ma'lumot yuboring yoki /start buyrug'ini bosing."
     )

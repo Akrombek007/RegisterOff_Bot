@@ -50,36 +50,8 @@ def handle_errors(func):
 
     return wrapper
 
-HEMIS_INFO_MAP = {
-"hemis_2": ("reyting", "HEMIS dasturidan reyting qaydonomasini olish"),
-"hemis_3": ("Dars", "Dars jadvallari haqida ma'lumot olish"),
-"hemis_4": ("nazorat", "Nazorat jadvallari haqida ma'lumot"),
-"hemis_5": ("reja", "O‘quv rejasi haqida ma‘lumot"),
-"hemis_6": ("resurs", "Fanlarning resurslari haqida ma‘lumot"),
-"hemis_7": ("davomat", "Talabaning darslardan qoldirgan soatlari (davomat)"),
-"hemis_8": ("buyruq", "Talabaning buyruqlari haqida ma‘lumot"),
-"hemis_9": ("hemis_info", "Universitetda o'qiyotganligi to'g'risidagi ma'lumotnoma olish")
-}
 
 class HemisHandler:
     @staticmethod
     @dp.callback_query_handler(lambda c: c.data == "info_2")
     @handle_errors
-    async def handle_main_menu(callback: types.CallbackQuery, state: FSMContext):
-        await callback.message.delete()
-        await callback.message.answer("Siz Hemis tizimini tanladingiz \U0001F5A5", reply_markup=hemis_keyboard)
-
-    @staticmethod
-    @dp.callback_query_handler(lambda c: c.data.startswith("hemis_"))
-    @handle_errors
-    async def handle_hemis_sections(callback: types.CallbackQuery, state: FSMContext):
-        data = callback.data
-        info = HEMIS_INFO_MAP.get(data)
-        folder_name, caption = info
-        path_file = await hemis_file_path_(folder_name)
-
-        for idx, path_ in enumerate(path_file, start=1):
-            with open(path_, "rb") as photo:
-                await callback.message.answer_photo(photo, caption=f"{idx}-rasm")
-
-        await callback.message.answer(caption)

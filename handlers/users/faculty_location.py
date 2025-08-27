@@ -57,26 +57,52 @@ class LocationHandler:
     @dp.callback_query_handler(lambda c: c.data.startswith("faculty_"))
     @handle_errors
     async def faculty_location_func(callback: types.CallbackQuery, state: FSMContext):
-        data = callback.data
-        if callback.data == "faculty_1":
-            await callback.message.answer("Quyidagi aniq fanlar maktabi joylashuvi")
-        elif callback.data == "faculty_2":
-            await callback.message.answer("Quyidagi tabiiy fanlar fakulteti joylashuvi")
-        elif callback.data == "faculty_3":
-            await callback.message.answer("Quyidagi Pedagogika psixologiya va inklyuziv ta’lim fakulteti joylashuvi")
-        elif callback.data == "faculty_4":
-            await callback.message.answer("Quyidagi Filologiya fakulteti joylashuvi")
-        elif callback.data == "faculty_5":
-            await callback.message.answer("Quyidagi Maktabgacha va boshlang‘ich ta’lim fakulteti joylashuvi")
-        elif callback.data == "faculty_6":
-            await callback.message.answer("Quyidagi Professional ta’lim va san’at fakulteti joylashuvi")
-        elif callback.data == "faculty_7":
-            await callback.message.answer("Quyidagi Tarix fakulteti joylashuvi")
-        elif callback.data == "faculty_8":
-            await callback.message.answer("Quyidagi Harbiy ta’lim fakulteti joylashuvi")
-        elif callback.data == "faculty_9":
-            await callback.message.answer(
-                "Quyidagi Innovatsion pedagogika qo‘shma ta'lim oliy maktabi fakulteti joylashuvi")
+        faculty_locations = {
+            "faculty_1": {
+                "title": "Quyidagi aniq fanlar maktabi joylashuvi",
+                "coords": (41.2914297, 69.2550864)
+            },
+            "faculty_2": {
+                "title": "Quyidagi tabiiy fanlar fakulteti joylashuvi",
+                "coords": (41.2711424, 69.1885274)
+            },
+            "faculty_3": {
+                "title": "Quyidagi Pedagogika psixologiya va inklyuziv ta’lim fakulteti joylashuvi",
+                "coords": (41.2716659, 69.2057483)
+            },
+            "faculty_4": {
+                "title": "Quyidagi Filologiya fakulteti joylashuvi",
+                "coords": (41.2642537, 69.2307141)
+            },
+            "faculty_5": {
+                "title": "Quyidagi Maktabgacha va boshlang‘ich ta’lim fakulteti joylashuvi",
+                "coords": (41.2716659, 69.2057483)
+            },
+            "faculty_6": {
+                "title": "Quyidagi Professional ta’lim va san’at fakulteti joylashuvi",
+                "coords": (41.2914297, 69.2550864)
+            },
+            "faculty_7": {
+                "title": "Quyidagi Tarix fakulteti joylashuvi",
+                "coords": (41.2914297, 69.2550864)
+            },
+            "faculty_8": {
+                "title": "Quyidagi Harbiy ta’lim fakulteti joylashuvi",
+                "coords": (41.2415391, 69.3329777)
+            },
+            "faculty_9": {
+                "title": "Quyidagi Innovatsion pedagogika qo‘shma ta'lim oliy maktabi fakulteti joylashuvi",
+                "coords": (41.2716659, 69.2057483)
+            }
+        }
+
+        key = callback.data
+        info = faculty_locations.get(key)
+
+        if info:
+            await callback.message.answer(info["title"])
+            lat, lon = info["coords"]
+            await callback.message.answer_location(latitude=lat, longitude=lon)
 
     @staticmethod
     @dp.callback_query_handler(lambda c: c.data.startswith("flat_"))

@@ -144,12 +144,12 @@ hemis_keyboard = InlineKeyboardMarkup(inline_keyboard=[
     [
         InlineKeyboardButton(text="Universitetda o'qiyotganligi to'g'risidagi ma'lumotnoma olish", callback_data="hemis_9")
     ],
-    [
-        InlineKeyboardButton(text="Bitiruv varoq'ini olish (bitiruvchilar)", callback_data="hemis_10")
-    ],
-    [
-        InlineKeyboardButton(text="Chaqiruv qog’ozini yuklab olish (sirtqi)", callback_data="hemis_11")
-    ],
+    # [
+    #     InlineKeyboardButton(text="Bitiruv varoq'ini olish (bitiruvchilar)", callback_data="hemis_10")
+    # ],
+    # [
+    #     InlineKeyboardButton(text="Chaqiruv qog’ozini yuklab olish (sirtqi)", callback_data="hemis_11")
+    # ],
     [
         InlineKeyboardButton(text=" Ma’sul xodim bilan bog’lanish (Fakultet bo’yicha", callback_data="hemis_12")
     ]
@@ -226,3 +226,12 @@ keyboard.add(button)
 
 admins_message = InlineKeyboardMarkup(row_width=1)
 admins_message.add(InlineKeyboardButton(text="Ma'sul xodim bilan bog'lanish", callback_data="admins_message"))
+
+
+def reply_button_markup(support_id: int) -> InlineKeyboardMarkup:
+    markup = InlineKeyboardMarkup()
+    markup.add(InlineKeyboardButton(
+        text="✅ Javob berish",
+        callback_data=f"support_reply_{support_id}"
+    ))
+    return markup

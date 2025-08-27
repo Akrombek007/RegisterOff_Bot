@@ -7,6 +7,9 @@ from functools import wraps
 from aiogram import types
 from loader import dp
 import logging
+from file_service import akademic_get_file_path
+from aiogram.types import InputFile
+from aiogram import Bot
 
 # Fayl junatishni bloklash uchun handler
 dp.message_handler(content_types=[types.ContentType.DOCUMENT,
@@ -56,6 +59,7 @@ class AkademikHandler:
     @dp.callback_query_handler(lambda c: c.data == "info_1")
     @handle_errors
     async def akademik_func(callback: types.CallbackQuery, state: FSMContext):
+        await callback.message.delete()
         await callback.message.answer("Siz akademik faoliyatni tanladingiz 📚", reply_markup=akademik_keyboard)
 
     @staticmethod
@@ -74,7 +78,13 @@ class AkademikHandler:
         elif data == "akademik_3":
             await callback.message.answer("Grandlar va tanlovlar haqida ma'lumotlar!", reply_markup=akademik_keyboard)
         elif data == "akademik_4":
-            await callback.message.answer("Ilmiy konferensiyalar haqida ma'lumotlar!", reply_markup=akademik_keyboard)
+            await callback.message.answer("Ilmiy konferensiyalar haqida ma'lumotlar!")
+            path_ = await akademic_get_file_path('490-buyruq_2025.pdf')
+            if path_:
+                document = InputFile(path_)  # Aiogram 2 da faylni shu bilan yuborasiz
+                await callback.message.bot.send_document(chat_id=callback.message.chat.id, document=document)
+            else:
+                await callback.message.answer("Fayl topilmadi.")
         elif data == "akademik_5":
             await callback.message.answer("Innovatsion g'oya va startaplarga ro'yxatdan o'tish haqida ma'lumotlar!",
                                           reply_markup=akademik_keyboard)

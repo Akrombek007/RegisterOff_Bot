@@ -58,10 +58,23 @@ class BotHandler:
     async def start(message: types.Message, state: FSMContext):
         await state.reset_state(with_data=True)
         await message.answer("Xizmat turini tanlang:", reply_markup=user_menu)
+        await db.add(User(
+            username=message.from_user.username,
+            telegram_number='',
+            telegram_id=message.from_user.id,
+            telegram_name=message.from_user.first_name
+        ))
 
     @staticmethod
     @dp.callback_query_handler(lambda c: c.data.startswith("langauage_"))
     @handle_errors
     async def process_contact(callback_query: types.CallbackQuery, state: FSMContext):
+        await callback_query.message.delete()
         await callback_query.message.answer("Xush kelibsiz! Xizmat turini tanlang:", reply_markup=user_menu)
-        await callback_query.answer()
+        if not await db.get(User, filters={'telegram_id': str(callback_query.from_user.id)}):
+            await db.add(User(
+                username=callback_query.from_user.username or '',
+                telegram_number='',
+                telegram_id=f'{callback_query.from_user.id}',
+                telegram_name=callback_query.from_user.full_name
+            ))

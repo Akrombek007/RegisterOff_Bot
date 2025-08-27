@@ -9,6 +9,7 @@ __pycache__/
 .qodo
 alembic.ini
 migrations
+alembic
 
 # Distribution / packaging
 .Python
