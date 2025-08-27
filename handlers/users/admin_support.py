@@ -56,17 +56,17 @@ def handle_errors(func):
 async def start_password_reset(callback: types.CallbackQuery):
     await callback.message.delete()
     await callback.message.answer(
-        "HEMIS login parolni qayta tiklash uchun JSHSHIR va Ism Familiyangizni to'liq kiriting!\n"
-        "(Masalan: 12345678901234 Anvarov Anvar)"
+        "HEMIS login parolni tiklash uchun JSHSHIR va Ism Familiyangizni to‘liq kiriting.\n"
+        "(Masalan: 12345678901234 Anvarov Anvar)",
+        reply_markup=types.ForceReply(selective=True)
     )
 
 
 # ✅ 2. Foydalanuvchi tomonidan yuborilgan JSHSHIR + Ism Familiya
-@dp.message_handler(lambda message: len(message.text.strip()) >= 20 and message.text[:14].isdigit())
+@dp.message_handler(lambda msg: msg.reply_to_message is not None)
 async def process_support_request(message: types.Message):
-    is_valid, error_msg = validate_jshshir_fullname(message.text)
-    if not is_valid:
-        await message.answer(error_msg)
+    # Kontekstni aniqlash: faqat HEMISga javobmi?
+    if "HEMIS login parolni tiklash" not in message.reply_to_message.text:
         return
     user_telegram_id = str(message.from_user.id)
     user = await db.get(User, filters={'telegram_id': user_telegram_id})
@@ -139,7 +139,7 @@ async def handle_admin_reply(message: types.Message):
 
     await dp.bot.send_message(
         chat_id=user.telegram_id,
-        text=f"✅ Admin javobi:\n{message.text}", reply_markup=user_menu
+        text=f"✅ Admin javobi:\n{message.text}\nXizmat turini tanlang:", reply_markup=user_menu
     )
     await message.answer("✅ Javob foydalanuvchiga yuborildi.")
 
