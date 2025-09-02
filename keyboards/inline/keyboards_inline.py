@@ -39,20 +39,20 @@ langauage_keyboard.add(
 )
 
 user_menu = InlineKeyboardMarkup(inline_keyboard=[
-    [
-        InlineKeyboardButton(text="Akademik faoliyat bo'yicha murojaatlar!", callback_data="info_1"),
-    ],
+    # [
+    #     InlineKeyboardButton(text="Akademik faoliyat bo'yicha murojaatlar!", callback_data="info_1"),
+    # ],
     [
         InlineKeyboardButton(text="Hemis tizimi yuzasidan murojaatlar!", callback_data="info_2"),
     ],
     [
         InlineKeyboardButton(text="Fakeltet va turar joylarni manzili (lokatsiya)", callback_data="info_3"),
     ],
+    # [
+    #     InlineKeyboardButton(text="To'lovlar masalasi bo'yicha murojaatlar!", callback_data="info_4"),
+    # ],
     [
-        InlineKeyboardButton(text="To'lovlar masalasi bo'yicha murojaatlar!", callback_data="info_4"),
-    ],
-    [
-        InlineKeyboardButton(text="Savol va takliflar bo'yicha adminga murojaat!", callback_data="info_5"),
+        InlineKeyboardButton(text="Savol va takliflar bo'yicha adminga murojaat!", callback_data="support_admin"),
     ]
 ])
 '''
@@ -80,7 +80,7 @@ contract_keyboard = InlineKeyboardMarkup(inline_keyboard=[
         InlineKeyboardButton(text="Ortiqcha to’lovni qaytarish bo’yicha (kantrakt, qayta o’qish, yotoqxona)", callback_data="contract_6")
     ],
     [
-        InlineKeyboardButton(text="Ma’sul xodim bilan bog’lanish (Fakultet bo’yicha)", callback_data="contract_7")
+        InlineKeyboardButton(text="Ma’sul xodim bilan bog’lanish (Fakultet bo’yicha)", callback_data="support_admin")
     ]
 ])
 
@@ -151,7 +151,7 @@ hemis_keyboard = InlineKeyboardMarkup(inline_keyboard=[
     #     InlineKeyboardButton(text="Chaqiruv qog’ozini yuklab olish (sirtqi)", callback_data="hemis_11")
     # ],
     [
-        InlineKeyboardButton(text=" Ma’sul xodim bilan bog’lanish (Fakultet bo’yicha", callback_data="hemis_12")
+        InlineKeyboardButton(text=" Ma’sul xodim bilan bog’lanish (Fakultet bo’yicha", callback_data="support_admin")
     ]
 ])
 
@@ -187,7 +187,7 @@ akademik_keyboard = InlineKeyboardMarkup(inline_keyboard=[
         InlineKeyboardButton(text="Qo'shma ta'limga hujjat topshirish (innovatsion pedagog)!", callback_data="akademik_9")
     ],
     [
-        InlineKeyboardButton(text="Ma'sul xodim bilan bog'lanish!", callback_data="akademik_10")
+        InlineKeyboardButton(text="Ma'sul xodim bilan bog'lanish!", callback_data="support_admin")
     ]
 ]
 )

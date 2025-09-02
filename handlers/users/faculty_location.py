@@ -108,18 +108,40 @@ class LocationHandler:
     @dp.callback_query_handler(lambda c: c.data.startswith("flat_"))
     @handle_errors
     async def student_flat_func(callback: types.CallbackQuery, state: FSMContext):
-        data = callback.data
-        if callback.data == "flat_1":
-            await callback.message.answer("Quyidagi Oqtepa texnikumga tegishli talabalar turar joyi joylashuvi")
-        elif callback.data == "flat_2":
-            await callback.message.answer("Quyidagi 5-sonli talabalar turar joyi joylashuvi")
-        elif callback.data == "flat_3":
-            await callback.message.answer("Quyidagi 7-sonli talabalar turar joyi joylashuvi")
-        elif callback.data == "flat_4":
-            await callback.message.answer("Quyidagi 8-sonli talabalar turar joyi joylashuvi")
-        elif callback.data == "flat_5":
-            await callback.message.answer("Quyidagi 9-sonli talabalar turar joyi joylashuvi")
-        elif callback.data == "flat_6":
-            await callback.message.answer("Quyidagi 10-sonli talabalar turar joyi joylashuvi")
-        elif callback.data == "flat_7":
-            await callback.message.answer("Quyidagi DXSH talabar turar joyi joylashuvi")
+        flat_locations = {
+            "flat_1": {
+                "title": "Quyidagi Oqtepa texnikumga tegishli talabalar turar joyi joylashuvi",
+                "coords": (41.2987179, 69.2137509)
+            },
+            "flat_2": {
+                "title": "Quyidagi 5-sonli talabalar turar joyi joylashuvi",
+                "coords": (41.2849723, 69.2354544)
+            },
+            "flat_3": {
+                "title": "Quyidagi 7-sonli talabalar turar joyi joylashuvi",
+                "coords": (41.2849723, 69.2354544)
+            },
+            "flat_4": {
+                "title": "Quyidagi 8-sonli talabalar turar joyi joylashuvi",
+                "coords": (41.2849723, 69.2354544)
+            },
+            "flat_5": {
+                "title": "Quyidagi 9-sonli talabalar turar joyi joylashuvi",
+                "coords": (41.2849723, 69.2354544)
+            },
+            "flat_6": {
+                "title": "Quyidagi 10-sonli talabalar turar joyi joylashuvi",
+                "coords": (41.286967, 69.2255179)
+            },
+            "flat_7": {
+                "title": "Quyidagi DXSH talabar turar joyi joylashuvi",
+                "coords": (41.2642537, 69.2307141)
+            }
+        }
+        key = callback.data
+        info = flat_locations.get(key)
+
+        if info:
+            await callback.message.answer(info["title"])
+            lat, lon = info["coords"]
+            await callback.message.answer_location(latitude=lat, longitude=lon)

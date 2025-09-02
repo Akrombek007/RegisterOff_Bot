@@ -6,7 +6,7 @@ from functools import wraps
 from aiogram import types
 from loader import dp
 import logging
-from keyboards.inline import hemis_keyboard
+from keyboards.inline import hemis_keyboard, user_menu
 
 # Fayl junatishni bloklash uchun handler
 dp.message_handler(content_types=[types.ContentType.DOCUMENT,
@@ -82,4 +82,4 @@ class HemisHandler:
             with open(path_, "rb") as photo:
                 await callback.message.answer_photo(photo, caption=f"{idx}-rasm")
 
-        await callback.message.answer(caption)
+        await callback.message.answer('Xizmat turini tanlang:', reply_markup=user_menu)
